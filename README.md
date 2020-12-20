@@ -6,3 +6,7 @@
 - Tests are run on a deployed version of html file [here](https://keenonred.github.io/)
 - Test cases are defined in [this document](./TestCases&Bugs.xlsx) on the first tab and bugs are on the second tab
 
+## Requirements
+
+- Visual Studio IDE
+- Firefox and Chrome browsers
