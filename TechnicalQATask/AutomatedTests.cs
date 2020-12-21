@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Threading;
 
 namespace TechnicalQATask
 {
@@ -7,7 +8,7 @@ namespace TechnicalQATask
 
     public class AutomatedTests : WebDriverFactory
     {
-        public AutomatedTests(BrowserType browser) : base(browser) 
+        public AutomatedTests(BrowserType browser) : base(browser)
         {
             HelperMethods.Init(_driver);
         }
@@ -22,17 +23,14 @@ namespace TechnicalQATask
         [Test]
         public void EnterValidIntViaUrl()
         {
-            for (var width = 3; width <= 9; width++)
+            for (int width = 3; width <= 9; width++)
             {
-                for (var height = 3; height <= 9; height++)
+                for (int height = 3; height <= 9; height++)
                 {
-                    var expectedAlertText = "Done! Ready for the next try? Give me a size [3-9]:";
-                    var url = $"https://keenonred.github.io/?width={width}&height={height}";
-
+                    string expectedAlertText = "Done! Ready for the next try? Give me a size [3-9]:";
+                    string url = $"https://keenonred.github.io/?width={width}&height={height}";
                     _driver.Navigate().GoToUrl(url);
-
                     HelperMethods.AssertCustomGrid(height, width);
-
                     HelperMethods.SelectPerimeter();
                     var alert = _driver.SwitchTo().Alert();
                     Assert.AreEqual(expectedAlertText, alert.Text, "Check prompt message");
@@ -49,13 +47,12 @@ namespace TechnicalQATask
             for (int i = 3; i <= 9; i++)
             {
                 var alert = _driver.SwitchTo().Alert();
-                var expectedAlertText = "Done! Ready for the next try? Give me a size [3-9]:";
+                string expectedAlertText = "Done! Ready for the next try? Give me a size [3-9]:";
                 Assert.AreEqual(expectedAlertText, alert.Text, "Check prompt message");
-
                 alert.SendKeys(i.ToString());
                 alert.Accept();
+                Thread.Sleep(100);
                 HelperMethods.AssertCustomGrid(i, i);
-
                 HelperMethods.SelectPerimeter();
 
                 if (i == 9)
@@ -63,7 +60,6 @@ namespace TechnicalQATask
                     alert.Dismiss();
                 }
             }
-
         }
 
         [Test]
@@ -72,9 +68,8 @@ namespace TechnicalQATask
         [TestCase(3, 10)]
         public void EnterInvalidIntViaUrl(int width, int height)
         {
-            var url = $"https://keenonred.github.io/?width={width}&height={height}";
+            string url = $"https://keenonred.github.io/?width={width}&height={height}";
             _driver.Navigate().GoToUrl(url);
-
             HelperMethods.AssertDefaultGrid();
         }
 
@@ -85,15 +80,14 @@ namespace TechnicalQATask
         public void EnterInvalidIntViaPrompt(int invalidBoundary)
         {
             HelperMethods.SelectPerimeter();
-
             var alert = _driver.SwitchTo().Alert();
             alert.SendKeys(invalidBoundary.ToString());
             alert.Accept();
-
-            var expectedAlertText = "Not a good size!";
+            string expectedAlertText = "Not a good size!";
+            Assert.IsTrue(HelperMethods.IsAlertPresent(), "Prompt message is not present");
             Assert.AreEqual(expectedAlertText, alert.Text, "Check prompt message");
             alert.Accept();
-
+            Thread.Sleep(100);
             HelperMethods.AssertDefaultGrid();
         }
 
@@ -107,24 +101,21 @@ namespace TechnicalQATask
             var alert = _driver.SwitchTo().Alert();
             alert.SendKeys(invalidBoundary);
             alert.Accept();
-
-            var expectedAlertText = "Not a good size!";
-
+            string expectedAlertText = "Not a good size!";
             Assert.IsTrue(HelperMethods.IsAlertPresent(), "Prompt message is not present");
             Assert.AreEqual(expectedAlertText, alert.Text, "Check prompt message");
             alert.Accept();
-
             HelperMethods.AssertDefaultGrid();
         }
 
         [Test]
         public void SelectAllNoPrompt()
         {
-            for (var width = 3; width <= 9; width++)
+            for (int width = 3; width <= 9; width++)
             {
-                for (var height = 3; height <= 9; height++)
+                for (int height = 3; height <= 9; height++)
                 {
-                    var url = $"https://keenonred.github.io/?width={width}&height={height}";
+                    string url = $"https://keenonred.github.io/?width={width}&height={height}";
                     _driver.Navigate().GoToUrl(url);
                     HelperMethods.SelectAll();
                     Assert.IsFalse(HelperMethods.IsAlertPresent(), "Prompt message is shown");

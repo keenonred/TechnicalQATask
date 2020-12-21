@@ -23,7 +23,6 @@ namespace TechnicalQATask
             Chrome
         }
 
-
         public static IWebDriver WebDriver(BrowserType type)
         {
             IWebDriver driver = null;
@@ -51,7 +50,6 @@ namespace TechnicalQATask
             geckoService.Host = "::1";
             var firefoxOptions = new FirefoxOptions();
             firefoxOptions.AcceptInsecureCertificates = true;
-
             return new FirefoxDriver(geckoService, firefoxOptions);
         }
 
